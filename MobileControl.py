@@ -115,14 +115,18 @@ class MobileControl(OpenRTM_aist.DataFlowComponentBase):
 
     def onExecute(self, ec_id):
         if self._target_velocityIn.isNew():
+            # If there velocity input then set to Kobuki
             self._d_target_velocity = self._target_velocityIn.read();
             self._d_velocity.data = self._d_target_velocity.data;
             self._velocityOut.write()
         else:
             if self._target_poseIn.isNew():
+                # Set arrvial flag to False
                 self._d_flag.data = False
                 self._flagOut.write()
+                # Move Kobuki to the target
                 self.move_kobuki(self._target_poseIn.read())
+                # Set arrvial flag to True
                 self._d_flag.data = True
                 self._flagOut.write()
 
